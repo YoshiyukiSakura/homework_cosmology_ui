@@ -5,6 +5,7 @@ import {Layout} from "@/components";
 import {assets as allAssets, chains} from "chain-registry";
 import {useMemo, useState} from "react";
 import useAssetStore from '@/store/useAssetStore';
+import VStack from "@/components/common/VStack";
 
 export default function Home() {
     const {assets, addAsset, selectedChain, setSelectedChain} = useAssetStore();
@@ -45,27 +46,47 @@ export default function Home() {
         }
     };
 
+    const handleConfirmChainSelection = () => {
+        setSelectedChain(selectedChainKey as string);
+    };
+
     return (
         <Layout>
-            <AssetList
-                isOtherChains={false}
-                needChainSpace={false}
-                list={(allAssets).map(asset => ({
-                    chainName: asset.chain_name,
-                    imgSrc: asset?.logo_URIs?.png ?? "",
-                    isOtherChains: false,
-                    name: asset.name,
-                    onDeposit: () => {
-                        setIsOpenDeposit(true);
-                    },
-                    onWithdraw: () => {
-                    },
-                    symbol: asset.symbol,
-                    tokenAmount: '0',
-                    tokenAmountPrice: '0'
-                }))}
-                titles={['Asset', 'Balance']}
-            />
+            <VStack spacing={24} align="flex-start">
+                <Box width="100%" display="flex" alignItems="end" justifyContent="space-between">
+                    <Box display="flex" alignItems="end" gap="$6">
+                        <Combobox label="Select Chain" openOnFocus
+                                  styleProps={{width: "350px"}}
+                                  onSelectionChange={item => {
+                                      setSelectedChainKey(item ?? null)
+                                  }}>
+                            {chainOptions.map(option => <Combobox.Item key={option.value}>
+                                {option.label}
+                            </Combobox.Item>)}
+                        </Combobox>
+                        <Button intent="primary" onClick={handleConfirmChainSelection}>Filter By Chain</Button>
+                    </Box>
+                    <Button intent="primary" onClick={() => setIsOpenAddAssetModal(true)}>Add Asset</Button>
+                </Box>
+                <AssetList
+                    isOtherChains={false}
+                    needChainSpace={false}
+                    list={assets.filter(selectedChain ? (asset) => asset.chain_name === selectedChain : () => true).map(asset => ({
+                        chainName: asset.chain_name,
+                        imgSrc: asset?.logo_URIs?.png ?? "",
+                        isOtherChains: false,
+                        name: asset.name,
+                        onDeposit: () => {
+                        },
+                        onWithdraw: () => {
+                        },
+                        symbol: asset.symbol,
+                        tokenAmount: '0',
+                        tokenAmountPrice: '0'
+                    }))}
+                    titles={['Asset', 'Balance']}
+                />
+            </VStack>
             <BasicModal isOpen={isOpenAddAssetModal} onClose={onAddAssetModalClose} title="Add Asset">
                 <Box display="flex" flexDirection="column" alignItems="flex-end" gap="$8" px="$4">
                     {/*TODO: try to figure what this `inputAddonStart` is for*/}
