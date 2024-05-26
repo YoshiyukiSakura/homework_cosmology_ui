@@ -1,5 +1,5 @@
 import {
-    AssetList, BasicModal, Box, Button, Combobox,
+    AssetList, AssetWithdrawTokens, BasicModal, Box, Button, Combobox,
 } from "@interchain-ui/react";
 import {Layout} from "@/components";
 import {assets as allAssets, chains} from "chain-registry";
@@ -49,6 +49,8 @@ export default function Home() {
     const handleConfirmChainSelection = () => {
         setSelectedChain(selectedChainKey as string);
     };
+
+    const [isOpenDeposit, setIsOpenDeposit] = useState<boolean>(false);
 
     return (
         <Layout>
@@ -117,6 +119,40 @@ export default function Home() {
                     </Combobox>
                     <Button intent="primary" onClick={handleAddAsset}>Add Asset</Button>
                 </Box>
+            </BasicModal>
+
+            <BasicModal
+                isOpen={isOpenDeposit}
+                onClose={function () {
+                    setIsOpenDeposit(false);
+                }}
+                renderTrigger={function () {
+                }}
+                title="Deposit"
+            >
+                <AssetWithdrawTokens
+                    amount=""
+                    available={25.89}
+                    fromAddress="umee1lqsq...pv4axdaxk"
+                    fromImgSrc="https://raw.githubusercontent.com/cosmos/chain-registry/master/umee/images/umee.svg"
+                    fromName="Umee"
+                    fromSymbol="UMEE"
+                    onAddressChange={function Va() {
+                    }}
+                    onAddressConfirm={function Va() {
+                    }}
+                    onCancel={function Va() {
+                    }}
+                    onChange={function Va() {
+                    }}
+                    onTransfer={function Va() {
+                    }}
+                    priceDisplayAmount={0.5}
+                    timeEstimateLabel="20 seconds"
+                    toAddress="osmo1lqsq...pv48trj5k"
+                    toImgSrc="https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.svg"
+                    toName="Osmosis"
+                />
             </BasicModal>
         </Layout>
     );
