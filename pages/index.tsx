@@ -45,6 +45,7 @@ export default function Home() {
                         isOtherChains: false,
                         name: asset.name,
                         onDeposit: () => {
+                            setIsOpenDeposit(true)
                         },
                         onWithdraw: () => {
                         },
